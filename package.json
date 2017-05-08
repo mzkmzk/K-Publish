@@ -1,17 +1,17 @@
 {
-  "name": "qiniu-plugin",
-  "author": "gebilaoxiong <gebilaoxiong@gmail.com>",
-  "version": "0.0.7",
-  "description": "将webpack打包的资源文件上传至七牛云",
+  "name": "k-qiniu",
+  "author": "maizhikun",
+  "version": "1.0.0",
+  "description": "Packaged webpack resource file upload to seven Qiniu",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gebilaoxiong/qiniu-plugin.git"
+    "url": "https://github.com/mzkmzk/K-QiNiu.git"
   },
-  "bugs": "https://github.com/gebilaoxiong/issues",
+  "bugs": "https://github.com/mzkmzk/K-QiNiu/issues",
   "license": "ISC",
   "dependencies": {
     "colors": "^1.1.2",

@@ -1,27 +1,22 @@
-# qiniu-plugin
+# K-Qiniu
 
 将webpack打包后的文件上传至七牛云
 
 
-**安装：**
+# Install
 
 npm:
 
 ```
-  npm install qiniu-plugin --save
+  npm install k-qiniu --save
 ```
 
-**引入：**
+
+# Use
 
 ```
-  QiniuPlugin = reqiure('qiniu-plugin');
-```
-
-**使用：**
-
-```
-
-  var qiniuPlugin = new QiniuPlugin({
+  var QiniuPlugin = reqiure('k-qiniu'),
+     qiniuPlugin = new QiniuPlugin({
 
     // 七牛云的两对密匙 Access Key & Secret Key
     accessKey: 'accessKey',
