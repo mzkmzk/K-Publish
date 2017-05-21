@@ -13,8 +13,6 @@ var path = require('path'),
 
   $ = require('lodash'),
 
-  glob = require("glob"),
-
   utilSys = require('util'),
 
   util = require('./lib/util'),
@@ -25,7 +23,7 @@ var path = require('path'),
 
   Plugin, proto;
 
-console.log(path.join(process.cwd(),'/'))
+
 
 /**
  * 插件构造函数
@@ -77,7 +75,7 @@ proto.apply = function(compiler) {
   var me = this,
 
     // 文件命名函数
-    named = util.format(me.path || package.name + '/' + package.version),
+    named = util.format(me.path),
 
     // 空间名称
     bucket = me.bucket;
@@ -91,76 +89,44 @@ proto.apply = function(compiler) {
    */
   function onAfterEmit(compilation, callback) {
     var assets = compilation.assets,
-      
+
       // 队列
       taskQueue = queue(),
 
-      options = $.cloneDeep(package),
+      options = $.cloneDeep(package);
 
-      upFunc = function(asset, fileName) {
-       
-          var resource;
-          //console.log('asset.existsAt'+asset.existsAt);
-          //console.log(fileName);
-          if (!asset.emitted) {
-            return;
-          }
+    // 遍历资源
+    $.each(assets, function(asset, fileName) {
+      var resource;
 
-          // 资源文件名
-          options.asset = fileName;
+      if (!asset.emitted) {
+        return;
+      }
 
-          // 实例化资源
-          resource = new Resource({
-            bucket: bucket,
-            asset: asset.existsAt,
-            path: named(options) + '/' + asset.existsAt  //key
-          });
-           console.log(asset.emitted)
-        console.log(asset.existsAt)
-        console.log(fileName)
+      // 资源文件名
+      options.asset = fileName;
 
-          // 将上传任务放入队列中
-          taskQueue.push(function(next){
+      // 实例化资源
+      resource = new Resource({
+        bucket: bucket,
+        asset: asset.existsAt,
+        path: named(options)
+      });
 
-            // 上传完毕后上传下一个文件
-            resource.on('uploadsuccess', next);
+      // 将上传任务放入队列中
+      taskQueue.push(function(next){
 
-            resource.upload();
-          });
+        // 上传完毕后上传下一个文件
+        resource.on('uploadsuccess', next);
 
-      };
+        resource.upload();
+      });
 
-      if (me.otherFile) {
-       
-        glob(me.otherFile.glob, me.otherFile.options, function (err, files) {
-           
-           //console.log(Object.prototype.toString.call(assets))
-           $.each(files, function(element){
-            var filename = '';
-            //element = element.replace(path.join(process.cwd(),'/'),'')
-
-            //console.log(element)
-            upFunc({
-              emitted: true,
-              existsAt: element
-            },element)
-            
-           })
-           taskQueue.start(function(){
-              callback();
-            });
-        })
-       }else {
-          taskQueue.start(function(){
-            callback();
-          });
-       }
-    // 遍历webpack资源
-    $.each(assets, upFunc)
- 
-    
+    });
 
     // run queue
-    
+    taskQueue.start(function(){
+      callback();
+    });
   }
 }
