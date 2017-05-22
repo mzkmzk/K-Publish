@@ -103,8 +103,8 @@ proto.apply = function(compiler) {
         return;
       }
 
-      // 资源文件名
-      options.asset = fileName;
+      // 资源文件名 忽略问号后的字符
+      options.asset = fileName.replace(/\?.*$/, '');
 
       // 实例化资源
       resource = new Resource({
